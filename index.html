@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linger Workshop — Create a Link for Your Web-Hosted Assets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f3ef;
+        --surface: #ffffff;
+        --text: #1d1d1b;
+        --muted: #6b6a66;
+        --line: #d9d7d0;
+        --accent: #d6267a;
+        --accent-text: #ffffff;
+        --ok: #1f8a4c;
+        --err: #b3261e;
+        --sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+        --mono: ui-monospace, Menlo, Consolas, monospace;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #171716;
+          --surface: #222220;
+          --text: #f1f0ec;
+          --muted: #a3a19b;
+          --line: #3a3936;
+          --accent: #ff4fa3;
+          --accent-text: #171716;
+          --ok: #5fd08f;
+          --err: #ff8a80;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      main {
+        width: 100%;
+        max-width: 520px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 32px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 8px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        margin: 0 0 6px;
+      }
+      p { margin: 0 0 22px; color: var(--muted); }
+      .field { margin-bottom: 20px; }
+      label { display: block; font-weight: 600; margin-bottom: 6px; }
+      .hint { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+      input[type="email"], input[type="text"] {
+        width: 100%;
+        padding: 11px 12px;
+        font: inherit;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      input[type="file"] { display: none; }
+      .file-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .file-name { color: var(--muted); font-size: 15px; overflow-wrap: anywhere; }
+      button {
+        font: inherit;
+        font-weight: 600;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        background: var(--accent);
+        color: var(--accent-text);
+        cursor: pointer;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      button.secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--line);
+      }
+      button.submit { width: 100%; padding: 13px 18px; margin-top: 4px; }
+      .hidden { display: none !important; }
+      .msg { margin-top: 14px; font-size: 15px; min-height: 1.2em; }
+      .msg.err { color: var(--err); }
+      .msg.ok { color: var(--ok); }
+      .preview {
+        display: block;
+        max-width: 100%;
+        max-height: 220px;
+        margin-top: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+      }
+      audio.preview { width: 100%; border: none; }
+      dialog {
+        width: min(560px, calc(100% - 32px));
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 28px;
+        font-family: var(--sans);
+      }
+      dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+      dialog h2 { margin: 0 0 6px; font-size: 22px; font-weight: 600; }
+      .copy-field { display: flex; gap: 8px; margin-bottom: 18px; }
+      .copy-field input { flex: 1; min-width: 0; font-family: var(--mono); font-size: 13px; }
+      code { font-family: var(--mono); font-size: 0.85em; }
+      code.snippet {
+        display: block;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-size: 12.5px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+      .row { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Linger Workshop</p>
+      <h1>Create a link for your web-hosted assets (images, sound, videos)</h1>
+      <p>Upload a file to get a link you can use in CodePen or your A-Frame scene.</p>
+
+      <div class="field">
+        <label for="email">Northeastern email</label>
+        <input id="email" type="email" placeholder="you@northeastern.edu" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" type="text" placeholder="e.g. Park bench" maxlength="80" />
+        <p class="hint">A short name for your file. It's used in your link.</p>
+      </div>
+
+      <div class="field">
+        <label for="file">File</label>
+        <div class="file-row">
+          <button id="choose-btn" class="secondary" type="button">Upload file</button>
+          <span class="file-name" id="file-name">No file chosen</span>
+        </div>
+        <input id="file" type="file"
+          accept="image/png, image/jpeg, image/webp, image/gif, audio/mpeg, audio/wav, audio/ogg, audio/mp4, video/mp4, video/webm, .mp3, .wav, .ogg, .m4a, .mp4, .webm" />
+        <p class="hint">Images: PNG, JPG, WEBP, GIF. Sound: MP3, WAV, OGG, M4A. Video: MP4, WEBM. Up to 50 MB.</p>
+        <img id="img-preview" class="preview hidden" alt="Preview of your image" />
+        <audio id="audio-preview" class="preview hidden" controls></audio>
+        <video id="video-preview" class="preview hidden" controls muted playsinline></video>
+      </div>
+
+      <button id="submit-btn" class="submit" type="button">Submit</button>
+      <div class="msg" id="msg"></div>
+    </main>
+
+    <!-- RESULT DIALOG -->
+    <dialog id="result">
+      <h2 id="result-title">Your file is online</h2>
+      <p>Copy this link into your A-Frame scene.</p>
+      <div class="copy-field">
+        <input id="url-field" type="text" readonly />
+        <button id="copy-url" type="button">Copy</button>
+      </div>
+      <p style="margin-bottom:6px;">Or paste this straight into your <code>&lt;a-assets&gt;</code>:</p>
+      <code class="snippet" id="snippet"></code>
+      <p class="hint" style="margin-top:14px;">Save this link somewhere, like a note or your CodePen. It isn't emailed to you.</p>
+      <div class="row"><button id="done" class="secondary" type="button">Upload another</button></div>
+    </dialog>
+
+    <script>
+      // ============ SETTINGS: fill these in ============
+      const SUPABASE_URL = 'https://xsndyqmrgxiptetdbwwi.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_qkfiuikzNrdNd6f9aI1wQA_lLWmW9Fv';
+      const BUCKET = 'student-assets';
+
+      // Only these email domains are accepted (leave the list empty to accept any)
+      const ALLOWED_DOMAINS = ['northeastern.edu', 'husky.neu.edu'];
+      const MAX_BYTES = 50 * 1024 * 1024;
+      // =================================================
+
+      const $ = (id) => document.getElementById(id);
+
+      // Some computers don't report a file's type, so fall back to its extension
+      const TYPES_BY_EXT = {
+        png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif',
+        mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', m4a: 'audio/mp4',
+        mp4: 'video/mp4', webm: 'video/webm'
+      };
+      function fileType(file) {
+        const ext = (file.name.split('.').pop() || '').toLowerCase();
+        return file.type || TYPES_BY_EXT[ext] || '';
+      }
+      function kindOf(type) {
+        if (type.startsWith('image/')) return 'image';
+        if (type.startsWith('audio/')) return 'audio';
+        if (type.startsWith('video/')) return 'video';
+        return '';
+      }
+
+      // "Upload file" opens the file picker
+      $('choose-btn').addEventListener('click', () => $('file').click());
+
+      // Show the file name and a preview when a file is chosen
+      $('file').addEventListener('change', () => {
+        const file = $('file').files[0];
+        showMsg('msg', '');
+        hidePreviews();
+        $('file-name').textContent = file ? file.name : 'No file chosen';
+        if (!file) return;
+
+        const kind = kindOf(fileType(file));
+        if (!kind) {
+          return showMsg('msg', 'That file is not an image, sound, or video.', 'err');
+        }
+        const el = { image: $('img-preview'), audio: $('audio-preview'), video: $('video-preview') }[kind];
+        el.src = URL.createObjectURL(file);
+        el.classList.remove('hidden');
+      });
+
+      function hidePreviews() {
+        $('img-preview').classList.add('hidden');
+        $('audio-preview').pause();
+        $('audio-preview').classList.add('hidden');
+        $('video-preview').pause();
+        $('video-preview').classList.add('hidden');
+      }
+
+      // SUBMIT: check the email and file, upload, then show the link and send the email
+      $('submit-btn').addEventListener('click', async () => {
+        const email = $('email').value.trim().toLowerCase();
+        const domain = email.split('@')[1] || '';
+        const title = $('title').value.trim();
+        const file = $('file').files[0];
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return showMsg('msg', 'Please enter a valid email address.', 'err');
+        }
+        if (ALLOWED_DOMAINS.length && !ALLOWED_DOMAINS.includes(domain)) {
+          return showMsg('msg', 'Please use your Northeastern email.', 'err');
+        }
+        if (!title) {
+          return showMsg('msg', 'Please give your file a title.', 'err');
+        }
+        if (!file) {
+          return showMsg('msg', 'Please choose a file to upload.', 'err');
+        }
+        const type = fileType(file);
+        const kind = kindOf(type);
+        if (!kind) {
+          return showMsg('msg', 'That file is not an image, sound, or video.', 'err');
+        }
+        if (file.size > MAX_BYTES) {
+          return showMsg('msg', 'That file is over 50 MB. Try exporting a smaller version.', 'err');
+        }
+
+        $('submit-btn').disabled = true;
+        showMsg('msg', 'Uploading…');
+
+        // Unique, URL-safe filename: studentname/park-bench-1729612345-ab12.png
+        const person = email.split('@')[0].replace(/[^a-z0-9._-]/g, '');
+        const slug = slugify(title) || 'file';
+        const ext = (file.name.split('.').pop() || 'file').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const id = Math.random().toString(36).slice(2, 6);
+        const path = `${person}/${slug}-${Date.now()}-${id}.${ext}`;
+
+        try {
+          const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
+            method: 'POST',
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              // legacy anon keys (they start with "eyJ") also go in the Authorization header
+              ...(SUPABASE_ANON_KEY.startsWith('eyJ') ? { Authorization: `Bearer ${SUPABASE_ANON_KEY}` } : {}),
+              'Content-Type': type
+            },
+            body: file
+          });
+          if (!res.ok) throw new Error(await res.text());
+        } catch (err) {
+          console.error(err);
+          $('submit-btn').disabled = false;
+          return showMsg('msg', 'Upload failed. Please try again, or tell your instructor.', 'err');
+        }
+
+        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+        showMsg('msg', '');
+        $('submit-btn').disabled = false;
+        showResult(publicUrl, kind, title, slug);
+      });
+
+      // Turn a title into a safe name: "Park Bench!" -> "park-bench"
+      function slugify(text) {
+        return text.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+      }
+
+      // The snippet uses the title as the asset's id, e.g. id="park-bench"
+      const SNIPPETS = {
+        image: (url, id) => `<img id="${id}" crossorigin="anonymous" src="${url}">`,
+        audio: (url, id) =>
+          `<audio id="${id}" crossorigin="anonymous" preload="auto" src="${url}"></audio>\n\n` +
+          `<!-- then, in your scene: -->\n<a-entity sound="src: #${id}; autoplay: true; loop: true"></a-entity>`,
+        video: (url, id) =>
+          `<video id="${id}" crossorigin="anonymous" src="${url}" autoplay loop muted playsinline></video>\n\n` +
+          `<!-- then, in your scene: -->\n<a-video src="#${id}" width="3.2" height="1.8" position="0 1.6 -4"></a-video>`
+      };
+
+      function showResult(url, kind, title, slug) {
+        $('result-title').textContent = `“${title}” is online`;
+        $('url-field').value = url;
+        // an id can't start with a number in A-Frame, so "2nd-bench" becomes "asset-2nd-bench"
+        const assetId = /^[0-9]/.test(slug) ? `asset-${slug}` : slug;
+        $('snippet').textContent = SNIPPETS[kind](url, assetId);
+        $('result').showModal();
+      }
+
+
+      $('copy-url').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText($('url-field').value);
+        } catch {
+          $('url-field').select();
+          document.execCommand('copy');
+        }
+        $('copy-url').textContent = 'Copied';
+        setTimeout(() => ($('copy-url').textContent = 'Copy'), 1500);
+      });
+
+      // "Upload another" keeps the email, clears the title and file
+      $('done').addEventListener('click', () => {
+        $('result').close();
+        $('title').value = '';
+        $('file').value = '';
+        $('file-name').textContent = 'No file chosen';
+        hidePreviews();
+      });
+
+      function showMsg(id, text, kind) {
+        $(id).textContent = text;
+        $(id).className = 'msg' + (kind ? ' ' + kind : '');
+      }
+    </script>
+  </body>
+</html>
